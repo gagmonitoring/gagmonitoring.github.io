@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grow a Garden - Official Map Monitor</title>
+    <title>Grow a Garden Monitoring</title>
     <style>
         :root {
-            --primary-green: #2e7d32;
-            --secondary-green: #81c784;
-            --accent-green: #a5d6a7;
-            --dark-green: #1b5e20;
-            --light-green: #e8f5e9;
-            --text-dark: #263238;
-            --text-light: #eceff1;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
+            --primary-color: #2e7d32;
+            --secondary-color: #81c784;
+            --accent-color: #4caf50;
+            --text-color: #e8f5e9;
+            --background-color: #1b5e20;
+            --card-bg: #2e7d32;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.3s;
         }
 
         * {
@@ -25,141 +24,146 @@
         }
 
         body {
-            background-color: var(--light-green);
-            color: var(--text-dark);
-            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 20px;
             overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
         }
 
         header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 30px;
             animation: fadeIn 1s ease-out;
         }
 
         h1 {
             font-size: 2.5rem;
-            color: var(--dark-green);
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-            letter-spacing: 1px;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--text-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .subtitle {
-            font-size: 1.2rem;
-            color: var(--primary-green);
-            font-weight: 300;
+            font-size: 1.1rem;
+            opacity: 0.8;
         }
 
-        .tab-container {
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            animation: slideUp 0.5s ease-out;
+            height: 100%;
             display: flex;
-            justify-content: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 0.5rem;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .tab {
-            padding: 0.8rem 1.5rem;
-            background-color: var(--secondary-green);
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
             font-weight: 600;
-            color: var(--text-dark);
-            transition: var(--transition);
-            box-shadow: var(--shadow);
+            color: var(--text-color);
         }
 
-        .tab:hover {
-            background-color: var(--accent-green);
-            transform: translateY(-2px);
+        .refresh-time {
+            font-size: 0.8rem;
+            opacity: 0.7;
         }
 
-        .tab.active {
-            background-color: var(--primary-green);
-            color: var(--text-light);
-        }
-
-        .content-section {
-            display: none;
-            animation: fadeIn 0.5s ease-out;
-            background-color: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-        }
-
-        .content-section.active {
-            display: block;
-        }
-
-        .section-title {
-            color: var(--primary-green);
-            margin-bottom: 1.5rem;
-            font-size: 1.8rem;
-            border-bottom: 2px solid var(--accent-green);
-            padding-bottom: 0.5rem;
-            display: inline-block;
-        }
-
-        .data-table {
+        table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 1rem;
-            animation: slideUp 0.5s ease-out;
+            margin-top: 10px;
+            flex-grow: 1;
         }
 
-        .data-table th {
-            background-color: var(--primary-green);
-            color: var(--text-light);
-            padding: 1rem;
+        th {
+            background-color: rgba(0, 0, 0, 0.1);
+            padding: 10px;
             text-align: left;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
         }
 
-        .data-table td {
-            padding: 0.8rem 1rem;
-            border-bottom: 1px solid var(--accent-green);
+        td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
         }
 
-        .data-table tr:nth-child(even) {
-            background-color: var(--light-green);
+        tr:last-child td {
+            border-bottom: none;
         }
 
-        .data-table tr:hover {
-            background-color: var(--secondary-green);
-            transition: var(--transition);
+        tr:hover td {
+            background-color: rgba(255, 255, 255, 0.05);
         }
 
         .status-indicator {
             display: inline-block;
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            margin-right: 8px;
+            margin-right: 5px;
         }
 
         .status-active {
             background-color: #4caf50;
+            box-shadow: 0 0 5px #4caf50;
         }
 
         .status-inactive {
             background-color: #f44336;
+            box-shadow: 0 0 5px #f44336;
         }
 
-        .refresh-info {
-            text-align: center;
-            margin-top: 2rem;
-            color: var(--primary-green);
-            font-style: italic;
-            animation: pulse 2s infinite;
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--secondary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         @keyframes fadeIn {
@@ -178,159 +182,152 @@
             }
         }
 
-        @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
-        }
-
-        /* Responsive design */
+        /* Responsive adjustments */
         @media (max-width: 768px) {
             .container {
-                padding: 1rem;
+                grid-template-columns: 1fr;
             }
             
             h1 {
                 font-size: 2rem;
             }
-            
-            .data-table {
-                font-size: 0.9rem;
-            }
-            
-            .data-table th, .data-table td {
-                padding: 0.6rem;
-            }
         }
 
-        @media (max-width: 480px) {
-            .tab {
-                padding: 0.6rem 1rem;
-                font-size: 0.9rem;
-            }
-            
-            .section-title {
-                font-size: 1.5rem;
-            }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-color);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color);
+        }
+
+        /* Table container with max height and scroll */
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--secondary-color) rgba(0, 0, 0, 0.1);
+            flex-grow: 1;
+        }
+
+        /* Price styling */
+        .price {
+            color: #ffeb3b;
+            font-weight: 500;
+        }
+
+        /* Rarity styling */
+        .rarity-common {
+            color: #bdbdbd;
+        }
+
+        .rarity-uncommon {
+            color: #4caf50;
+        }
+
+        .rarity-rare {
+            color: #2196f3;
+        }
+
+        .rarity-epic {
+            color: #9c27b0;
+        }
+
+        .rarity-legendary {
+            color: #ff9800;
+        }
+
+        /* Weather icon */
+        .weather-icon {
+            font-size: 1.2rem;
+            vertical-align: middle;
+            margin-right: 5px;
         }
     </style>
 </head>
 <body>
+    <header>
+        <h1>GROW A GARDEN MONITOR</h1>
+        <p class="subtitle">Real-time game data tracking</p>
+    </header>
+
     <div class="container">
-        <header>
-            <h1>Grow a Garden Map Monitor</h1>
-            <p class="subtitle">Real-time game data tracking and analytics</p>
-        </header>
-
-        <div class="tab-container">
-            <button class="tab active" onclick="openTab('weather')">Weather</button>
-            <button class="tab" onclick="openTab('eventshop')">Event Shop</button>
-            <button class="tab" onclick="openTab('cosmetics')">Cosmetics</button>
-            <button class="tab" onclick="openTab('seeds')">Seeds</button>
-            <button class="tab" onclick="openTab('gear')">Gear</button>
-        </div>
-
-        <div id="weather" class="content-section active">
-            <h2 class="section-title">Current Weather Data</h2>
-            <div class="table-container">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Weather Type</th>
-                            <th>Duration</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="weather-data">
-                        <!-- Data will be inserted here by JavaScript -->
-                    </tbody>
-                </table>
+        <!-- Weather Card -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Current Weather</h2>
+                <span class="refresh-time">Updated: <span id="weather-time">Just now</span></span>
+            </div>
+            <div class="table-container" id="weather-container">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
             </div>
         </div>
 
-        <div id="eventshop" class="content-section">
-            <h2 class="section-title">Event Shop Items</h2>
-            <div class="table-container">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Item Name</th>
-                            <th>Price</th>
-                            <th>Currency</th>
-                            <th>Stock</th>
-                            <th>Category</th>
-                        </tr>
-                    </thead>
-                    <tbody id="eventshop-data">
-                        <!-- Data will be inserted here by JavaScript -->
-                    </tbody>
-                </table>
+        <!-- Event Shop Card -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Event Shop</h2>
+                <span class="refresh-time">Updated: <span id="eventshop-time">Just now</span></span>
+            </div>
+            <div class="table-container" id="eventshop-container">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
             </div>
         </div>
 
-        <div id="cosmetics" class="content-section">
-            <h2 class="section-title">Available Cosmetics</h2>
-            <div class="table-container">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Cosmetic Name</th>
-                            <th>Type</th>
-                            <th>Rarity</th>
-                            <th>Price</th>
-                            <th>Availability</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cosmetics-data">
-                        <!-- Data will be inserted here by JavaScript -->
-                    </tbody>
-                </table>
+        <!-- Cosmetics Card -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Cosmetics</h2>
+                <span class="refresh-time">Updated: <span id="cosmetics-time">Just now</span></span>
+            </div>
+            <div class="table-container" id="cosmetics-container">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
             </div>
         </div>
 
-        <div id="seeds" class="content-section">
-            <h2 class="section-title">Seed Catalog</h2>
-            <div class="table-container">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Seed Name</th>
-                            <th>Growth Time</th>
-                            <th>Yield</th>
-                            <th>Season</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
-                    <tbody id="seeds-data">
-                        <!-- Data will be inserted here by JavaScript -->
-                    </tbody>
-                </table>
+        <!-- Seeds Card -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Seeds</h2>
+                <span class="refresh-time">Updated: <span id="seeds-time">Just now</span></span>
+            </div>
+            <div class="table-container" id="seeds-container">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
             </div>
         </div>
 
-        <div id="gear" class="content-section">
-            <h2 class="section-title">Garden Gear</h2>
-            <div class="table-container">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Gear Name</th>
-                            <th>Type</th>
-                            <th>Efficiency</th>
-                            <th>Durability</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
-                    <tbody id="gear-data">
-                        <!-- Data will be inserted here by JavaScript -->
-                    </tbody>
-                </table>
+        <!-- Gear Card -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Gear</h2>
+                <span class="refresh-time">Updated: <span id="gear-time">Just now</span></span>
+            </div>
+            <div class="table-container" id="gear-container">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
             </div>
         </div>
-
-        <p class="refresh-info">Data refreshes automatically every 30 seconds</p>
     </div>
 
     <script>
@@ -343,181 +340,214 @@
             gear: 'https://gagapi.onrender.com/gear'
         };
 
-        // Tab functionality
-        function openTab(tabName) {
-            // Hide all content sections
-            const contentSections = document.getElementsByClassName('content-section');
-            for (let i = 0; i < contentSections.length; i++) {
-                contentSections[i].classList.remove('active');
-            }
-
-            // Deactivate all tabs
-            const tabs = document.getElementsByClassName('tab');
-            for (let i = 0; i < tabs.length; i++) {
-                tabs[i].classList.remove('active');
-            }
-
-            // Activate selected tab and content
-            document.getElementById(tabName).classList.add('active');
-            event.currentTarget.classList.add('active');
+        // Format time for display
+        function formatTime(date) {
+            return date.toLocaleTimeString();
         }
 
         // Fetch data from API
-        async function fetchData(endpoint) {
+        async function fetchData(endpoint, containerId, timeElementId, renderFunction) {
             try {
                 const response = await fetch(endpoint);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                return await response.json();
+                const data = await response.json();
+                
+                // Update time
+                const now = new Date();
+                document.getElementById(timeElementId).textContent = formatTime(now);
+                
+                // Render data
+                document.getElementById(containerId).innerHTML = renderFunction(data);
             } catch (error) {
-                console.error('Error fetching data:', error);
-                return null;
+                console.error(`Error fetching ${endpoint}:`, error);
+                document.getElementById(containerId).innerHTML = `
+                    <div style="color: #ff5252; text-align: center; padding: 20px;">
+                        Failed to load data. Please try again later.
+                    </div>
+                `;
             }
         }
 
-        // Format time
-        function formatTime(timestamp) {
-            if (!timestamp) return 'N/A';
-            const date = new Date(timestamp);
-            return date.toLocaleTimeString();
-        }
-
-        // Format status indicator
-        function formatStatus(isActive) {
+        // Render weather data
+        function renderWeather(data) {
+            if (!data || !data.weather) return '<div>No weather data available</div>';
+            
             return `
-                <span class="status-indicator ${isActive ? 'status-active' : 'status-inactive'}"></span>
-                ${isActive ? 'Active' : 'Inactive'}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Weather</th>
+                            <th>Status</th>
+                            <th>Duration</th>
+                            <th>Effects</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span class="weather-icon">${getWeatherIcon(data.weather)}</span>
+                                ${data.weather}
+                            </td>
+                            <td>
+                                <span class="status-indicator status-active"></span>
+                                Active
+                            </td>
+                            <td>${data.duration || 'N/A'}</td>
+                            <td>${data.effects || 'None'}</td>
+                        </tr>
+                    </tbody>
+                </table>
             `;
         }
 
-        // Update weather data
-        async function updateWeatherData() {
-            const data = await fetchData(API_ENDPOINTS.weather);
-            if (!data) return;
-
-            const tableBody = document.getElementById('weather-data');
-            tableBody.innerHTML = '';
-
-            data.forEach(weather => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${weather.type || 'N/A'}</td>
-                    <td>${weather.duration ? `${weather.duration} mins` : 'N/A'}</td>
-                    <td>${formatTime(weather.startTime)}</td>
-                    <td>${formatTime(weather.endTime)}</td>
-                    <td>${formatStatus(weather.isActive)}</td>
-                `;
-                tableBody.appendChild(row);
-            });
+        // Get weather icon
+        function getWeatherIcon(weather) {
+            const icons = {
+                'Sunny': '☀️',
+                'Rainy': '🌧️',
+                'Cloudy': '☁️',
+                'Stormy': '⛈️',
+                'Windy': '🌬️',
+                'Snowy': '❄️'
+            };
+            return icons[weather] || '🌱';
         }
 
-        // Update event shop data
-        async function updateEventShopData() {
-            const data = await fetchData(API_ENDPOINTS.eventshop);
-            if (!data) return;
-
-            const tableBody = document.getElementById('eventshop-data');
-            tableBody.innerHTML = '';
-
-            data.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${item.name || 'N/A'}</td>
-                    <td>${item.price || 'N/A'}</td>
-                    <td>${item.currency || 'N/A'}</td>
-                    <td>${item.stock !== undefined ? item.stock : 'N/A'}</td>
-                    <td>${item.category || 'N/A'}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-
-        // Update cosmetics data
-        async function updateCosmeticsData() {
-            const data = await fetchData(API_ENDPOINTS.cosmetics);
-            if (!data) return;
-
-            const tableBody = document.getElementById('cosmetics-data');
-            tableBody.innerHTML = '';
-
-            data.forEach(cosmetic => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${cosmetic.name || 'N/A'}</td>
-                    <td>${cosmetic.type || 'N/A'}</td>
-                    <td>${cosmetic.rarity || 'N/A'}</td>
-                    <td>${cosmetic.price || 'N/A'}</td>
-                    <td>${cosmetic.available ? 'Available' : 'Unavailable'}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-
-        // Update seeds data
-        async function updateSeedsData() {
-            const data = await fetchData(API_ENDPOINTS.seeds);
-            if (!data) return;
-
-            const tableBody = document.getElementById('seeds-data');
-            tableBody.innerHTML = '';
-
-            data.forEach(seed => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${seed.name || 'N/A'}</td>
-                    <td>${seed.growthTime ? `${seed.growthTime} mins` : 'N/A'}</td>
-                    <td>${seed.yield || 'N/A'}</td>
-                    <td>${seed.season || 'N/A'}</td>
-                    <td>${seed.price || 'N/A'}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-
-        // Update gear data
-        async function updateGearData() {
-            const data = await fetchData(API_ENDPOINTS.gear);
-            if (!data) return;
-
-            const tableBody = document.getElementById('gear-data');
-            tableBody.innerHTML = '';
-
-            data.forEach(gear => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${gear.name || 'N/A'}</td>
-                    <td>${gear.type || 'N/A'}</td>
-                    <td>${gear.efficiency ? `${gear.efficiency}%` : 'N/A'}</td>
-                    <td>${gear.durability ? `${gear.durability}%` : 'N/A'}</td>
-                    <td>${gear.price || 'N/A'}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-
-        // Update all data
-        async function updateAllData() {
-            await updateWeatherData();
-            await updateEventShopData();
-            await updateCosmeticsData();
-            await updateSeedsData();
-            await updateGearData();
+        // Render event shop data
+        function renderEventShop(data) {
+            if (!data || !Array.isArray(data.items)) return '<div>No event shop data available</div>';
             
-            // Add visual feedback for refresh
-            const refreshInfo = document.querySelector('.refresh-info');
-            refreshInfo.style.animation = 'none';
-            void refreshInfo.offsetWidth; // Trigger reflow
-            refreshInfo.style.animation = 'pulse 2s infinite';
+            return `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Rarity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.items.map(item => `
+                            <tr>
+                                <td>${item.name}</td>
+                                <td class="price">${item.price || '0'} ${item.currency || 'Coins'}</td>
+                                <td>${item.stock || '∞'}</td>
+                                <td class="rarity-${item.rarity?.toLowerCase() || 'common'}">${item.rarity || 'Common'}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
         }
 
-        // Initial load
-        document.addEventListener('DOMContentLoaded', () => {
-            updateAllData();
+        // Render cosmetics data
+        function renderCosmetics(data) {
+            if (!data || !Array.isArray(data.items)) return '<div>No cosmetics data available</div>';
             
+            return `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cosmetic</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                            <th>Rarity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.items.map(item => `
+                            <tr>
+                                <td>${item.name}</td>
+                                <td>${item.type || 'N/A'}</td>
+                                <td class="price">${item.price || '0'} ${item.currency || 'Coins'}</td>
+                                <td class="rarity-${item.rarity?.toLowerCase() || 'common'}">${item.rarity || 'Common'}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Render seeds data
+        function renderSeeds(data) {
+            if (!data || !Array.isArray(data.seeds)) return '<div>No seeds data available</div>';
+            
+            return `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Seed</th>
+                            <th>Growth Time</th>
+                            <th>Price</th>
+                            <th>Yield</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.seeds.map(seed => `
+                            <tr>
+                                <td>${seed.name}</td>
+                                <td>${seed.growthTime || 'N/A'}</td>
+                                <td class="price">${seed.price || '0'} Coins</td>
+                                <td>${seed.yield || 'N/A'}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Render gear data
+        function renderGear(data) {
+            if (!data || !Array.isArray(data.gear)) return '<div>No gear data available</div>';
+            
+            return `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Gear</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                            <th>Effect</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.gear.map(item => `
+                            <tr>
+                                <td>${item.name}</td>
+                                <td>${item.type || 'N/A'}</td>
+                                <td class="price">${item.price || '0'} ${item.currency || 'Coins'}</td>
+                                <td>${item.effect || 'None'}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Initialize and refresh data
+        function init() {
+            // Initial load
+            fetchData(API_ENDPOINTS.weather, 'weather-container', 'weather-time', renderWeather);
+            fetchData(API_ENDPOINTS.eventshop, 'eventshop-container', 'eventshop-time', renderEventShop);
+            fetchData(API_ENDPOINTS.cosmetics, 'cosmetics-container', 'cosmetics-time', renderCosmetics);
+            fetchData(API_ENDPOINTS.seeds, 'seeds-container', 'seeds-time', renderSeeds);
+            fetchData(API_ENDPOINTS.gear, 'gear-container', 'gear-time', renderGear);
+
             // Set up auto-refresh every 30 seconds
-            setInterval(updateAllData, 30000);
-        });
+            setInterval(() => {
+                fetchData(API_ENDPOINTS.weather, 'weather-container', 'weather-time', renderWeather);
+                fetchData(API_ENDPOINTS.eventshop, 'eventshop-container', 'eventshop-time', renderEventShop);
+                fetchData(API_ENDPOINTS.cosmetics, 'cosmetics-container', 'cosmetics-time', renderCosmetics);
+                fetchData(API_ENDPOINTS.seeds, 'seeds-container', 'seeds-time', renderSeeds);
+                fetchData(API_ENDPOINTS.gear, 'gear-container', 'gear-time', renderGear);
+            }, 30000);
+        }
+
+        // Start the application
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
