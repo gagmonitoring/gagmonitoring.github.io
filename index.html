@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grow a Garden - Official Map Monitor</title>
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --secondary-green: #81c784;
+            --accent-green: #a5d6a7;
+            --dark-green: #1b5e20;
+            --light-green: #e8f5e9;
+            --text-dark: #263238;
+            --text-light: #eceff1;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-green);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--dark-green);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--primary-green);
+            font-weight: 300;
+        }
+
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tab {
+            padding: 0.8rem 1.5rem;
+            background-color: var(--secondary-green);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .tab:hover {
+            background-color: var(--accent-green);
+            transform: translateY(-2px);
+        }
+
+        .tab.active {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+            background-color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-title {
+            color: var(--primary-green);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--accent-green);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .data-table th {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .data-table td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid var(--accent-green);
+        }
+
+        .data-table tr:nth-child(even) {
+            background-color: var(--light-green);
+        }
+
+        .data-table tr:hover {
+            background-color: var(--secondary-green);
+            transition: var(--transition);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-active {
+            background-color: #4caf50;
+        }
+
+        .status-inactive {
+            background-color: #f44336;
+        }
+
+        .refresh-info {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--primary-green);
+            font-style: italic;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .data-table {
+                font-size: 0.9rem;
+            }
+            
+            .data-table th, .data-table td {
+                padding: 0.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tab {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Grow a Garden Map Monitor</h1>
+            <p class="subtitle">Real-time game data tracking and analytics</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab('weather')">Weather</button>
+            <button class="tab" onclick="openTab('eventshop')">Event Shop</button>
+            <button class="tab" onclick="openTab('cosmetics')">Cosmetics</button>
+            <button class="tab" onclick="openTab('seeds')">Seeds</button>
+            <button class="tab" onclick="openTab('gear')">Gear</button>
+        </div>
+
+        <div id="weather" class="content-section active">
+            <h2 class="section-title">Current Weather Data</h2>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Weather Type</th>
+                            <th>Duration</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="weather-data">
+                        <!-- Data will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="eventshop" class="content-section">
+            <h2 class="section-title">Event Shop Items</h2>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Price</th>
+                            <th>Currency</th>
+                            <th>Stock</th>
+                            <th>Category</th>
+                        </tr>
+                    </thead>
+                    <tbody id="eventshop-data">
+                        <!-- Data will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="cosmetics" class="content-section">
+            <h2 class="section-title">Available Cosmetics</h2>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Cosmetic Name</th>
+                            <th>Type</th>
+                            <th>Rarity</th>
+                            <th>Price</th>
+                            <th>Availability</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cosmetics-data">
+                        <!-- Data will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="seeds" class="content-section">
+            <h2 class="section-title">Seed Catalog</h2>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Seed Name</th>
+                            <th>Growth Time</th>
+                            <th>Yield</th>
+                            <th>Season</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="seeds-data">
+                        <!-- Data will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="gear" class="content-section">
+            <h2 class="section-title">Garden Gear</h2>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Gear Name</th>
+                            <th>Type</th>
+                            <th>Efficiency</th>
+                            <th>Durability</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="gear-data">
+                        <!-- Data will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <p class="refresh-info">Data refreshes automatically every 30 seconds</p>
+    </div>
+
+    <script>
+        // API endpoints
+        const API_ENDPOINTS = {
+            weather: 'https://gagapi.onrender.com/weather',
+            eventshop: 'https://gagapi.onrender.com/eventshop',
+            cosmetics: 'https://gagapi.onrender.com/cosmetics',
+            seeds: 'https://gagapi.onrender.com/seeds',
+            gear: 'https://gagapi.onrender.com/gear'
+        };
+
+        // Tab functionality
+        function openTab(tabName) {
+            // Hide all content sections
+            const contentSections = document.getElementsByClassName('content-section');
+            for (let i = 0; i < contentSections.length; i++) {
+                contentSections[i].classList.remove('active');
+            }
+
+            // Deactivate all tabs
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+
+            // Activate selected tab and content
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Fetch data from API
+        async function fetchData(endpoint) {
+            try {
+                const response = await fetch(endpoint);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                return null;
+            }
+        }
+
+        // Format time
+        function formatTime(timestamp) {
+            if (!timestamp) return 'N/A';
+            const date = new Date(timestamp);
+            return date.toLocaleTimeString();
+        }
+
+        // Format status indicator
+        function formatStatus(isActive) {
+            return `
+                <span class="status-indicator ${isActive ? 'status-active' : 'status-inactive'}"></span>
+                ${isActive ? 'Active' : 'Inactive'}
+            `;
+        }
+
+        // Update weather data
+        async function updateWeatherData() {
+            const data = await fetchData(API_ENDPOINTS.weather);
+            if (!data) return;
+
+            const tableBody = document.getElementById('weather-data');
+            tableBody.innerHTML = '';
+
+            data.forEach(weather => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${weather.type || 'N/A'}</td>
+                    <td>${weather.duration ? `${weather.duration} mins` : 'N/A'}</td>
+                    <td>${formatTime(weather.startTime)}</td>
+                    <td>${formatTime(weather.endTime)}</td>
+                    <td>${formatStatus(weather.isActive)}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Update event shop data
+        async function updateEventShopData() {
+            const data = await fetchData(API_ENDPOINTS.eventshop);
+            if (!data) return;
+
+            const tableBody = document.getElementById('eventshop-data');
+            tableBody.innerHTML = '';
+
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name || 'N/A'}</td>
+                    <td>${item.price || 'N/A'}</td>
+                    <td>${item.currency || 'N/A'}</td>
+                    <td>${item.stock !== undefined ? item.stock : 'N/A'}</td>
+                    <td>${item.category || 'N/A'}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Update cosmetics data
+        async function updateCosmeticsData() {
+            const data = await fetchData(API_ENDPOINTS.cosmetics);
+            if (!data) return;
+
+            const tableBody = document.getElementById('cosmetics-data');
+            tableBody.innerHTML = '';
+
+            data.forEach(cosmetic => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${cosmetic.name || 'N/A'}</td>
+                    <td>${cosmetic.type || 'N/A'}</td>
+                    <td>${cosmetic.rarity || 'N/A'}</td>
+                    <td>${cosmetic.price || 'N/A'}</td>
+                    <td>${cosmetic.available ? 'Available' : 'Unavailable'}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Update seeds data
+        async function updateSeedsData() {
+            const data = await fetchData(API_ENDPOINTS.seeds);
+            if (!data) return;
+
+            const tableBody = document.getElementById('seeds-data');
+            tableBody.innerHTML = '';
+
+            data.forEach(seed => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${seed.name || 'N/A'}</td>
+                    <td>${seed.growthTime ? `${seed.growthTime} mins` : 'N/A'}</td>
+                    <td>${seed.yield || 'N/A'}</td>
+                    <td>${seed.season || 'N/A'}</td>
+                    <td>${seed.price || 'N/A'}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Update gear data
+        async function updateGearData() {
+            const data = await fetchData(API_ENDPOINTS.gear);
+            if (!data) return;
+
+            const tableBody = document.getElementById('gear-data');
+            tableBody.innerHTML = '';
+
+            data.forEach(gear => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${gear.name || 'N/A'}</td>
+                    <td>${gear.type || 'N/A'}</td>
+                    <td>${gear.efficiency ? `${gear.efficiency}%` : 'N/A'}</td>
+                    <td>${gear.durability ? `${gear.durability}%` : 'N/A'}</td>
+                    <td>${gear.price || 'N/A'}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Update all data
+        async function updateAllData() {
+            await updateWeatherData();
+            await updateEventShopData();
+            await updateCosmeticsData();
+            await updateSeedsData();
+            await updateGearData();
+            
+            // Add visual feedback for refresh
+            const refreshInfo = document.querySelector('.refresh-info');
+            refreshInfo.style.animation = 'none';
+            void refreshInfo.offsetWidth; // Trigger reflow
+            refreshInfo.style.animation = 'pulse 2s infinite';
+        }
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAllData();
+            
+            // Set up auto-refresh every 30 seconds
+            setInterval(updateAllData, 30000);
+        });
+    </script>
+</body>
+</html>
