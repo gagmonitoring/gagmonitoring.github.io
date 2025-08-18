@@ -9,12 +9,13 @@
             --primary-color: #2e7d32;
             --secondary-color: #81c784;
             --accent-color: #388e3c;
-            --text-color: #e8f5e9;
-            --background-color: #1b5e20;
-            --card-bg: #2e7d32;
-            --table-header: #1b5e20;
-            --table-row-odd: #2e7d32;
-            --table-row-even: #388e3c;
+            --background-color: #f1f8e9;
+            --card-color: #ffffff;
+            --text-color: #1b5e20;
+            --text-light: #e8f5e9;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
         }
 
         * {
@@ -27,53 +28,59 @@
         body {
             background-color: var(--background-color);
             color: var(--text-color);
-            overflow-x: hidden;
+            min-height: 100vh;
+            padding: 20px;
+            animation: fadeIn 0.5s ease;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         header {
             text-align: center;
             margin-bottom: 30px;
-            animation: fadeIn 1s ease-in-out;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         h1 {
             font-size: 2.5rem;
+            font-weight: 700;
             margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--text-color);
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            color: var(--primary-color);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
 
         .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
+            font-size: 1.1rem;
+            color: var(--accent-color);
         }
 
         .tabs {
             display: flex;
             justify-content: center;
-            flex-wrap: wrap;
             margin-bottom: 30px;
+            flex-wrap: wrap;
             gap: 10px;
+            animation: fadeIn 0.8s ease;
         }
 
         .tab {
             padding: 12px 24px;
-            background-color: var(--primary-color);
+            background-color: var(--secondary-color);
+            color: var(--text-light);
             border: none;
-            border-radius: 25px;
-            color: var(--text-color);
-            font-size: 1rem;
+            border-radius: var(--border-radius);
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
         }
 
         .tab:hover {
@@ -82,102 +89,117 @@
         }
 
         .tab.active {
-            background-color: var(--accent-color);
-            font-weight: bold;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background-color: var(--primary-color);
         }
 
-        .tab-content {
+        .content {
             display: none;
-            animation: fadeIn 0.5s ease-in-out;
+            animation: fadeIn 0.5s ease;
         }
 
-        .tab-content.active {
+        .content.active {
             display: block;
         }
 
         .card {
-            background-color: var(--card-bg);
-            border-radius: 15px;
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
             padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
         }
 
         .card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
         }
 
         .card-title {
             font-size: 1.5rem;
             margin-bottom: 15px;
-            padding-bottom: 10px;
+            color: var(--primary-color);
             border-bottom: 2px solid var(--secondary-color);
-            text-align: center;
+            padding-bottom: 8px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
-            border-radius: 10px;
-            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
         }
 
         th {
-            background-color: var(--table-header);
-            padding: 12px;
-            text-align: left;
-            font-weight: bold;
-        }
-
-        td {
-            padding: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        tr:nth-child(odd) {
-            background-color: var(--table-row-odd);
+            background-color: var(--secondary-color);
+            color: var(--text-light);
+            font-weight: 600;
         }
 
         tr:nth-child(even) {
-            background-color: var(--table-row-even);
+            background-color: #f5f5f5;
         }
 
         tr:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: #e8f5e9;
         }
 
         .status {
             display: inline-block;
             padding: 5px 10px;
             border-radius: 20px;
-            font-weight: bold;
+            font-weight: 600;
             font-size: 0.8rem;
-            text-transform: uppercase;
         }
 
         .status.active {
-            background-color: #4caf50;
-            color: white;
+            background-color: #c8e6c9;
+            color: #1b5e20;
         }
 
         .status.inactive {
-            background-color: #f44336;
-            color: white;
+            background-color: #ffcdd2;
+            color: #c62828;
         }
 
-        .last-updated {
-            text-align: right;
-            font-size: 0.9rem;
-            opacity: 0.8;
+        .refresh-info {
+            text-align: center;
             margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            animation: pulse 2s infinite;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--secondary-color);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         @media (max-width: 768px) {
@@ -188,7 +210,7 @@
             
             .tab {
                 width: 100%;
-                margin-bottom: 10px;
+                max-width: 300px;
             }
             
             table {
@@ -197,105 +219,106 @@
             }
         }
 
-        /* Curved elements */
-        .card, .tab, table {
-            border-radius: 12px;
+        /* Animation for table rows */
+        @keyframes rowAppear {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
-        /* Animation for table rows */
         tr {
-            transition: background-color 0.3s ease;
+            animation: rowAppear 0.3s ease forwards;
+            opacity: 0;
         }
+
+        tr:nth-child(1) { animation-delay: 0.1s; }
+        tr:nth-child(2) { animation-delay: 0.2s; }
+        tr:nth-child(3) { animation-delay: 0.3s; }
+        tr:nth-child(4) { animation-delay: 0.4s; }
+        tr:nth-child(5) { animation-delay: 0.5s; }
+        tr:nth-child(6) { animation-delay: 0.6s; }
+        tr:nth-child(7) { animation-delay: 0.7s; }
+        tr:nth-child(8) { animation-delay: 0.8s; }
+        tr:nth-child(9) { animation-delay: 0.9s; }
+        tr:nth-child(10) { animation-delay: 1.0s; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Grow a Garden Monitoring</h1>
-            <p class="subtitle">Real-time game data tracking</p>
-        </header>
+    <header>
+        <h1>Grow a Garden Monitoring</h1>
+        <p class="subtitle">Real-time game data tracking</p>
+    </header>
 
-        <div class="tabs">
-            <button class="tab active" data-tab="weather">Weather</button>
-            <button class="tab" data-tab="event-shop">Event Shop</button>
-            <button class="tab" data-tab="cosmetics">Cosmetics</button>
-            <button class="tab" data-tab="seeds">Seeds</button>
-            <button class="tab" data-tab="gear">Gear</button>
-        </div>
+    <div class="tabs">
+        <button class="tab active" data-tab="weather">Weather</button>
+        <button class="tab" data-tab="eventshop">Event Shop</button>
+        <button class="tab" data-tab="cosmetics">Cosmetics</button>
+        <button class="tab" data-tab="seeds">Seeds</button>
+        <button class="tab" data-tab="gear">Gear</button>
+    </div>
 
-        <div id="weather" class="tab-content active">
-            <div class="card">
-                <h2 class="card-title">Current Weather</h2>
-                <div id="weather-content" class="loading">
-                    <div class="spinner"></div>
-                    Loading weather data...
-                </div>
+    <div id="weather" class="content active">
+        <div class="card">
+            <h2 class="card-title">Current Weather</h2>
+            <div id="weather-data" class="loading">
+                <div class="loading-spinner"></div>
             </div>
-        </div>
-
-        <div id="event-shop" class="tab-content">
-            <div class="card">
-                <h2 class="card-title">Event Shop Items</h2>
-                <div id="event-shop-content" class="loading">
-                    <div class="spinner"></div>
-                    Loading event shop data...
-                </div>
-            </div>
-        </div>
-
-        <div id="cosmetics" class="tab-content">
-            <div class="card">
-                <h2 class="card-title">Available Cosmetics</h2>
-                <div id="cosmetics-content" class="loading">
-                    <div class="spinner"></div>
-                    Loading cosmetics data...
-                </div>
-            </div>
-        </div>
-
-        <div id="seeds" class="tab-content">
-            <div class="card">
-                <h2 class="card-title">Seed Information</h2>
-                <div id="seeds-content" class="loading">
-                    <div class="spinner"></div>
-                    Loading seeds data...
-                </div>
-            </div>
-        </div>
-
-        <div id="gear" class="tab-content">
-            <div class="card">
-                <h2 class="card-title">Gear Items</h2>
-                <div id="gear-content" class="loading">
-                    <div class="spinner"></div>
-                    Loading gear data...
-                </div>
-            </div>
-        </div>
-
-        <div class="last-updated">
-            Last updated: <span id="last-updated">Never</span>
-            <br>
-            Auto-refreshing every 30 seconds
         </div>
     </div>
+
+    <div id="eventshop" class="content">
+        <div class="card">
+            <h2 class="card-title">Event Shop Items</h2>
+            <div id="eventshop-data" class="loading">
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cosmetics" class="content">
+        <div class="card">
+            <h2 class="card-title">Available Cosmetics</h2>
+            <div id="cosmetics-data" class="loading">
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="seeds" class="content">
+        <div class="card">
+            <h2 class="card-title">Seed Catalog</h2>
+            <div id="seeds-data" class="loading">
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="gear" class="content">
+        <div class="card">
+            <h2 class="card-title">Gear Items</h2>
+            <div id="gear-data" class="loading">
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+    </div>
+
+    <p class="refresh-info">Data refreshes automatically every 30 seconds</p>
 
     <script>
         // API endpoints
         const API_ENDPOINTS = {
             weather: 'https://gagapi.onrender.com/weather',
-            eventShop: 'https://gagapi.onrender.com/eventshop',
+            eventshop: 'https://gagapi.onrender.com/eventshop',
             cosmetics: 'https://gagapi.onrender.com/cosmetics',
             seeds: 'https://gagapi.onrender.com/seeds',
             gear: 'https://gagapi.onrender.com/gear'
         };
 
-        // Tab functionality
+        // Tab switching functionality
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', () => {
-                // Remove active class from all tabs and content
+                // Remove active class from all tabs and contents
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
                 
                 // Add active class to clicked tab and corresponding content
                 tab.classList.add('active');
@@ -304,20 +327,10 @@
             });
         });
 
-        // Format date/time
-        function formatDateTime(date) {
-            return date.toLocaleString();
-        }
-
-        // Update last updated time
-        function updateLastUpdated() {
-            document.getElementById('last-updated').textContent = formatDateTime(new Date());
-        }
-
         // Fetch data from API
-        async function fetchData(endpoint, elementId, renderFunction) {
+        async function fetchData(endpoint) {
             try {
-                const response = await fetch(endpoint, {
+                const response = await fetch(API_ENDPOINTS[endpoint], {
                     headers: {
                         'accept': 'application/json'
                     }
@@ -327,57 +340,47 @@
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
-                const data = await response.json();
-                renderFunction(data, elementId);
-                updateLastUpdated();
+                return await response.json();
             } catch (error) {
-                console.error(`Error fetching data from ${endpoint}:`, error);
-                document.getElementById(elementId).innerHTML = `
-                    <div class="error">
-                        Failed to load data. Please try again later.
-                        <br>
-                        Error: ${error.message}
-                    </div>
-                `;
+                console.error(`Error fetching ${endpoint} data:`, error);
+                return null;
             }
         }
 
-        // Render weather data
-        function renderWeather(data, elementId) {
-            const content = `
+        // Format weather data
+        function formatWeatherData(data) {
+            if (!data) return '<p>Error loading weather data</p>';
+            
+            return `
                 <table>
                     <thead>
                         <tr>
                             <th>Weather Type</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
+                            <th>Active</th>
                             <th>Duration (minutes)</th>
-                            <th>Status</th>
+                            <th>Time Left (minutes)</th>
                         </tr>
                     </thead>
                     <tbody>
-                        ${data.map(weather => `
-                            <tr>
-                                <td>${weather.weatherType}</td>
-                                <td>${new Date(weather.startTime).toLocaleString()}</td>
-                                <td>${new Date(weather.endTime).toLocaleString()}</td>
-                                <td>${Math.round((new Date(weather.endTime) - new Date(weather.startTime)) / 60000}</td>
-                                <td>
-                                    <span class="status ${new Date() >= new Date(weather.startTime) && new Date() <= new Date(weather.endTime) ? 'active' : 'inactive'}">
-                                        ${new Date() >= new Date(weather.startTime) && new Date() <= new Date(weather.endTime) ? 'Active' : 'Inactive'}
-                                    </span>
-                                </td>
-                            </tr>
-                        `).join('')}
+                        <tr>
+                            <td>${data.weatherType}</td>
+                            <td><span class="status ${data.active ? 'active' : 'inactive'}">${data.active ? 'Active' : 'Inactive'}</span></td>
+                            <td>${data.durationMinutes}</td>
+                            <td>${data.timeLeftMinutes}</td>
+                        </tr>
                     </tbody>
                 </table>
+                <p style="margin-top: 15px; font-style: italic;">${data.active ? 
+                    `Currently ${data.weatherType} for ${data.timeLeftMinutes} more minutes` : 
+                    'No active weather effects'}</p>
             `;
-            document.getElementById(elementId).innerHTML = content;
         }
 
-        // Render event shop data
-        function renderEventShop(data, elementId) {
-            const content = `
+        // Format event shop data
+        function formatEventShopData(data) {
+            if (!data || !data.items) return '<p>Error loading event shop data</p>';
+            
+            let html = `
                 <table>
                     <thead>
                         <tr>
@@ -389,128 +392,178 @@
                         </tr>
                     </thead>
                     <tbody>
-                        ${data.map(item => `
-                            <tr>
-                                <td>${item.itemName}</td>
-                                <td>${item.price}</td>
-                                <td>${item.currencyType}</td>
-                                <td>${item.stock}</td>
-                                <td>${item.purchaseLimit}</td>
-                            </tr>
-                        `).join('')}
+            `;
+            
+            data.items.forEach(item => {
+                html += `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>${item.price}</td>
+                        <td>${item.currencyType}</td>
+                        <td>${item.stock === -1 ? 'Unlimited' : item.stock}</td>
+                        <td>${item.purchaseLimit === -1 ? 'Unlimited' : item.purchaseLimit}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
                     </tbody>
                 </table>
+                <p style="margin-top: 15px; font-style: italic;">${data.items.length} items available in the event shop</p>
             `;
-            document.getElementById(elementId).innerHTML = content;
+            
+            return html;
         }
 
-        // Render cosmetics data
-        function renderCosmetics(data, elementId) {
-            const content = `
+        // Format cosmetics data
+        function formatCosmeticsData(data) {
+            if (!data || !data.cosmetics) return '<p>Error loading cosmetics data</p>';
+            
+            let html = `
                 <table>
                     <thead>
                         <tr>
-                            <th>Cosmetic Name</th>
+                            <th>Name</th>
+                            <th>Rarity</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                            <th>Currency</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            data.cosmetics.forEach(cosmetic => {
+                html += `
+                    <tr>
+                        <td>${cosmetic.name}</td>
+                        <td>${cosmetic.rarity}</td>
+                        <td>${cosmetic.type}</td>
+                        <td>${cosmetic.price}</td>
+                        <td>${cosmetic.currency}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+                <p style="margin-top: 15px; font-style: italic;">${data.cosmetics.length} cosmetics available</p>
+            `;
+            
+            return html;
+        }
+
+        // Format seeds data
+        function formatSeedsData(data) {
+            if (!data || !data.seeds) return '<p>Error loading seeds data</p>';
+            
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Currency</th>
+                            <th>Growth Time (min)</th>
+                            <th>Yield</th>
+                            <th>Experience</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            data.seeds.forEach(seed => {
+                html += `
+                    <tr>
+                        <td>${seed.name}</td>
+                        <td>${seed.price}</td>
+                        <td>${seed.currency}</td>
+                        <td>${seed.growthTimeMinutes}</td>
+                        <td>${seed.yield}</td>
+                        <td>${seed.experience}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+                <p style="margin-top: 15px; font-style: italic;">${data.seeds.length} seed types available</p>
+            `;
+            
+            return html;
+        }
+
+        // Format gear data
+        function formatGearData(data) {
+            if (!data || !data.gear) return '<p>Error loading gear data</p>';
+            
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
                             <th>Type</th>
                             <th>Rarity</th>
                             <th>Price</th>
-                            <th>Available</th>
+                            <th>Currency</th>
+                            <th>Effect</th>
                         </tr>
                     </thead>
                     <tbody>
-                        ${data.map(cosmetic => `
-                            <tr>
-                                <td>${cosmetic.cosmeticName}</td>
-                                <td>${cosmetic.type}</td>
-                                <td>${cosmetic.rarity}</td>
-                                <td>${cosmetic.price}</td>
-                                <td>
-                                    <span class="status ${cosmetic.available ? 'active' : 'inactive'}">
-                                        ${cosmetic.available ? 'Yes' : 'No'}
-                                    </span>
-                                </td>
-                            </tr>
-                        `).join('')}
+            `;
+            
+            data.gear.forEach(item => {
+                html += `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>${item.type}</td>
+                        <td>${item.rarity}</td>
+                        <td>${item.price}</td>
+                        <td>${item.currency}</td>
+                        <td>${item.effect || 'N/A'}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
                     </tbody>
                 </table>
+                <p style="margin-top: 15px; font-style: italic;">${data.gear.length} gear items available</p>
             `;
-            document.getElementById(elementId).innerHTML = content;
+            
+            return html;
         }
 
-        // Render seeds data
-        function renderSeeds(data, elementId) {
-            const content = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Seed Name</th>
-                            <th>Growth Time (minutes)</th>
-                            <th>Yield</th>
-                            <th>Price</th>
-                            <th>Season</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${data.map(seed => `
-                            <tr>
-                                <td>${seed.seedName}</td>
-                                <td>${seed.growthTime}</td>
-                                <td>${seed.yield}</td>
-                                <td>${seed.price}</td>
-                                <td>${seed.season}</td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-            document.getElementById(elementId).innerHTML = content;
-        }
-
-        // Render gear data
-        function renderGear(data, elementId) {
-            const content = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Gear Name</th>
-                            <th>Type</th>
-                            <th>Efficiency</th>
-                            <th>Durability</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${data.map(gear => `
-                            <tr>
-                                <td>${gear.gearName}</td>
-                                <td>${gear.type}</td>
-                                <td>${gear.efficiency}</td>
-                                <td>${gear.durability}</td>
-                                <td>${gear.price}</td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-            document.getElementById(elementId).innerHTML = content;
-        }
-
-        // Load all data
-        function loadAllData() {
-            fetchData(API_ENDPOINTS.weather, 'weather-content', renderWeather);
-            fetchData(API_ENDPOINTS.eventShop, 'event-shop-content', renderEventShop);
-            fetchData(API_ENDPOINTS.cosmetics, 'cosmetics-content', renderCosmetics);
-            fetchData(API_ENDPOINTS.seeds, 'seeds-content', renderSeeds);
-            fetchData(API_ENDPOINTS.gear, 'gear-content', renderGear);
+        // Update all data
+        async function updateAllData() {
+            // Weather
+            const weatherData = await fetchData('weather');
+            document.getElementById('weather-data').innerHTML = formatWeatherData(weatherData);
+            
+            // Event Shop
+            const eventShopData = await fetchData('eventshop');
+            document.getElementById('eventshop-data').innerHTML = formatEventShopData(eventShopData);
+            
+            // Cosmetics
+            const cosmeticsData = await fetchData('cosmetics');
+            document.getElementById('cosmetics-data').innerHTML = formatCosmeticsData(cosmeticsData);
+            
+            // Seeds
+            const seedsData = await fetchData('seeds');
+            document.getElementById('seeds-data').innerHTML = formatSeedsData(seedsData);
+            
+            // Gear
+            const gearData = await fetchData('gear');
+            document.getElementById('gear-data').innerHTML = formatGearData(gearData);
         }
 
         // Initial load
-        document.addEventListener('DOMContentLoaded', () => {
-            loadAllData();
-            
-            // Set up auto-refresh every 30 seconds
-            setInterval(loadAllData, 30000);
-        });
+        updateAllData();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(updateAllData, 30000);
     </script>
 </body>
 </html>
