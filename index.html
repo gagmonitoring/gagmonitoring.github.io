@@ -1,768 +1,881 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grow a Garden Monitoring</title>
+    <title>Game Monitoring Dashboard - GAGAPI</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #2e7d32;
-            --secondary-color: #4caf50;
-            --accent-color: #8bc34a;
-            --background-color: #f1f8e9;
-            --card-color: #ffffff;
-            --text-color: #1b5e20;
-            --text-light: #e8f5e9;
-            --shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            --border-radius: 16px;
-            --transition: all 0.3s ease;
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --accent: #fd79a8;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #d63031;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-dark: #2d3436;
+            --text-light: #636e72;
         }
-
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
-
+        
         body {
-            background: linear-gradient(135deg, var(--background-color) 0%, #e8f5e9 100%);
-            color: var(--text-color);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--text-dark);
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
-            animation: fadeIn 1s ease;
+            position: relative;
+            overflow-x: hidden;
         }
-
+        
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,128L48,117.3C96,107,192,85,288,112C384,139,480,213,576,218.7C672,224,768,160,864,138.7C960,117,1056,139,1152,149.3C1248,160,1344,160,1392,160L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            background-position: bottom;
+            opacity: 0.2;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        /* Login Screen */
+        #login-screen {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .logo {
+            margin-bottom: 20px;
+        }
+        
+        .logo h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .logo p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 18px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        
+        .input-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.2);
+            outline: none;
+        }
+        
+        .btn {
+            padding: 18px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.5);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .btn-game {
+            background: linear-gradient(135deg, var(--success) 0%, #00a382 100%);
+            color: white;
+            padding: 20px 35px;
+            font-size: 1.3rem;
+            margin-top: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        /* Dashboard */
+        #dashboard {
+            display: none;
+            animation: slideUp 0.8s ease-out;
+        }
+        
+        header {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .header-title h1 {
+            color: var(--primary);
+            font-size: 2.2rem;
+        }
+        
+        .header-title p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn-refresh {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-logout {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .card-icon {
+            font-size: 1.8rem;
+        }
+        
+        .card-body {
+            padding: 25px;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        
+        .item-list {
+            list-style: none;
+        }
+        
+        .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            animation: fadeIn 0.5s;
+        }
+        
+        .item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-name {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .item-icon {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f2f6;
+            border-radius: 10px;
+            color: var(--primary);
+        }
+        
+        .quantity {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .weather-icon {
+            font-size: 3rem;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--primary);
+        }
+        
+        .weather-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .badge-active {
+            background: var(--success);
+            color: white;
+        }
+        
+        .badge-inactive {
+            background: #ccc;
+            color: #666;
+        }
+        
+        .effects-list {
+            list-style-type: disc;
+            padding-left: 25px;
+            margin-top: 15px;
+        }
+        
+        .history-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            animation: slideIn 0.5s;
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        .game-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 35px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            margin-top: 25px;
+        }
+        
+        .game-section h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+        
+        .last-update {
+            text-align: center;
+            color: var(--text-light);
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            opacity: 0.9;
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(60px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 20px;
-            animation: slideDown 0.8s ease;
+        
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateX(-25px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
-
-        @keyframes slideDown {
-            from { transform: translateY(-30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 10px;
-            color: var(--primary-color);
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-            letter-spacing: 1px;
-        }
-
-        .subtitle {
-            font-size: 1.2rem;
-            color: var(--secondary-color);
-            margin-bottom: 20px;
-        }
-
-        .last-updated {
-            font-size: 0.9rem;
-            color: var(--primary-color);
-            background: rgba(76, 175, 80, 0.1);
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 20px;
-            margin-top: 10px;
-        }
-
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-        .card {
-            background: var(--card-color);
-            border-radius: var(--border-radius);
-            padding: 25px;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            animation: scaleIn 0.5s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        @keyframes scaleIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .card-title {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .card-title i {
-            color: var(--secondary-color);
-        }
-
-        .info-grid {
-            display: grid;
-            gap: 15px;
-        }
-
-        .info-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(139, 195, 74, 0.3);
-        }
-
-        .info-item:last-child {
-            border-bottom: none;
-        }
-
-        .info-label {
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        .info-value {
-            font-weight: 500;
-            color: var(--secondary-color);
-            text-align: right;
-        }
-
-        .status {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.8rem;
-        }
-
-        .status.active {
-            background-color: #c8e6c9;
-            color: #1b5e20;
-        }
-
-        .status.inactive {
-            background-color: #ffcdd2;
-            color: #c62828;
-        }
-
-        .tabs {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 10px;
-            animation: fadeIn 1s ease;
-        }
-
-        .tab {
-            padding: 14px 28px;
-            background-color: var(--secondary-color);
-            color: var(--text-light);
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition);
-            box-shadow: var(--shadow);
-        }
-
-        .tab:hover {
-            background-color: var(--primary-color);
-            transform: translateY(-3px);
-        }
-
-        .tab.active {
-            background-color: var(--primary-color);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .content {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .content.active {
-            display: block;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background: var(--card-color);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
-
-        th, td {
-            padding: 16px 20px;
-            text-align: left;
-            border-bottom: 1px solid rgba(139, 195, 74, 0.2);
-        }
-
-        th {
-            background-color: var(--primary-color);
-            color: var(--text-light);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-        }
-
-        tr:nth-child(even) {
-            background-color: rgba(241, 248, 233, 0.5);
-        }
-
-        tr:hover {
-            background-color: rgba(139, 195, 74, 0.1);
-        }
-
-        .refresh-info {
-            text-align: center;
-            margin-top: 40px;
-            font-size: 0.9rem;
-            color: var(--accent-color);
-            animation: pulse 2s infinite;
-        }
-
+        
         @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
+            0% { box-shadow: 0 0 0 0 rgba(0, 184, 148, 0.4); }
+            70% { box-shadow: 0 0 0 12px rgba(0, 184, 148, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 184, 148, 0); }
         }
-
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 200px;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid var(--secondary-color);
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
+        
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            to { transform: rotate(360deg); }
         }
-
+        
+        /* Responsive */
         @media (max-width: 768px) {
-            .dashboard {
+            .grid {
                 grid-template-columns: 1fr;
             }
             
-            .tabs {
+            header {
                 flex-direction: column;
-                align-items: center;
+                text-align: center;
+                gap: 20px;
             }
             
-            .tab {
-                width: 100%;
-                max-width: 300px;
+            .user-actions {
+                justify-content: center;
             }
             
-            table {
-                display: block;
-                overflow-x: auto;
+            .card-body {
+                max-height: 300px;
             }
-        }
-
-        /* Animation for table rows */
-        @keyframes rowAppear {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        tr {
-            animation: rowAppear 0.3s ease forwards;
-            opacity: 0;
-        }
-
-        tr:nth-child(1) { animation-delay: 0.1s; }
-        tr:nth-child(2) { animation-delay: 0.2s; }
-        tr:nth-child(3) { animation-delay: 0.3s; }
-        tr:nth-child(4) { animation-delay: 0.4s; }
-        tr:nth-child(5) { animation-delay: 0.5s; }
-        tr:nth-child(6) { animation-delay: 0.6s; }
-        tr:nth-child(7) { animation-delay: 0.7s; }
-        tr:nth-child(8) { animation-delay: 0.8s; }
-        tr:nth-child(9) { animation-delay: 0.9s; }
-        tr:nth-child(10) { animation-delay: 1.0s; }
-
-        .section-title {
-            font-size: 2rem;
-            color: var(--primary-color);
-            margin: 40px 0 20px;
-            text-align: center;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-            margin: 10px auto;
-            border-radius: 2px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <div class="logo">
+            <h1><i class="fas fa-gamepad"></i> GAGAPI Monitor</h1>
+            <p>Monitor game data secara real-time</p>
+        </div>
+        
+        <div class="input-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="Masukkan username">
+        </div>
+        
+        <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Masukkan password">
+        </div>
+        
+        <button class="btn btn-primary" onclick="login()">
+            <i class="fas fa-sign-in-alt"></i> Login
+        </button>
+        
+        <div id="login-message" style="color: var(--danger); margin-top: 20px; display: none;">
+            <i class="fas fa-exclamation-circle"></i> Username atau password salah!
+        </div>
+    </div>
+    
+    <!-- Dashboard -->
+    <div id="dashboard" class="container">
         <header>
-            <h1>Grow a Garden Monitoring</h1>
-            <p class="subtitle">Real-time tracking of game data and statistics</p>
-            <div class="last-updated">
-                <i class="fas fa-sync-alt"></i> Auto-updates every 30 seconds
+            <div class="header-title">
+                <h1><i class="fas fa-chart-line"></i> Game Monitoring Dashboard</h1>
+                <p>Data real-time dari GAGAPI</p>
+            </div>
+            <div class="user-actions">
+                <button class="btn btn-refresh" onclick="fetchData()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+                <button class="btn btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
             </div>
         </header>
-
-        <div class="dashboard">
+        
+        <div class="grid">
+            <!-- Cuaca -->
             <div class="card">
-                <h2 class="card-title"><i class="fas fa-cloud-sun"></i> Current Weather</h2>
-                <div class="info-grid" id="weather-data">
-                    <div class="info-item">
-                        <span class="info-label">Type:</span>
-                        <span class="info-value">Loading...</span>
+                <div class="card-header">
+                    <div class="card-title">Cuaca</div>
+                    <div class="card-icon"><i class="fas fa-cloud-sun-rain"></i></div>
+                </div>
+                <div class="card-body">
+                    <div class="weather-icon">
+                        <i class="fas fa-cloud-rain" id="weather-icon"></i>
                     </div>
-                    <div class="info-item">
-                        <span class="info-label">Status:</span>
-                        <span class="info-value">Loading...</span>
+                    <div class="weather-info">
+                        <p><strong>Tipe:</strong> <span id="weather-type">-</span></p>
+                        <p><strong>Status:</strong> <span class="badge badge-active" id="weather-status">-</span></p>
+                        <p><strong>Terakhir Update:</strong> <span id="weather-update">-</span></p>
                     </div>
-                    <div class="info-item">
-                        <span class="info-label">Effects:</span>
-                        <span class="info-value">Loading...</span>
+                    <p><strong>Efek:</strong></p>
+                    <ul class="effects-list" id="weather-effects">
+                        <li>Loading efek cuaca...</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Gear -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Gear</div>
+                    <div class="card-icon"><i class="fas fa-tools"></i></div>
+                </div>
+                <div class="card-body">
+                    <div class="spinner" id="gear-spinner"></div>
+                    <ul class="item-list" id="gear-list">
+                        <!-- Data gear akan diisi oleh JavaScript -->
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Seeds -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Seeds</div>
+                    <div class="card-icon"><i class="fas fa-seedling"></i></div>
+                </div>
+                <div class="card-body">
+                    <div class="spinner" id="seeds-spinner"></div>
+                    <ul class="item-list" id="seeds-list">
+                        <!-- Data seeds akan diisi oleh JavaScript -->
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Eggs -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Eggs</div>
+                    <div class="card-icon"><i class="fas fa-egg"></i></div>
+                </div>
+                <div class="card-body">
+                    <div class="spinner" id="eggs-spinner"></div>
+                    <ul class="item-list" id="eggs-list">
+                        <!-- Data eggs akan diisi oleh JavaScript -->
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Honey -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Honey</div>
+                    <div class="card-icon"><i class="fas fa-honey-pot"></i></div>
+                </div>
+                <div class="card-body">
+                    <div class="spinner" id="honey-spinner"></div>
+                    <ul class="item-list" id="honey-list">
+                        <!-- Data honey akan diisi oleh JavaScript -->
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Cosmetics -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Cosmetics</div>
+                    <div class="card-icon"><i class="fas fa-couch"></i></div>
+                </div>
+                <div class="card-body">
+                    <div class="spinner" id="cosmetics-spinner"></div>
+                    <ul class="item-list" id="cosmetics-list">
+                        <!-- Data cosmetics akan diisi oleh JavaScript -->
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Events -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Events</div>
+                    <div class="card-icon"><i class="fas fa-calendar-alt"></i></div>
+                </div>
+                <div class="card-body">
+                    <div class="spinner" id="events-spinner"></div>
+                    <ul class="item-list" id="events-list">
+                        <!-- Data events akan diisi oleh JavaScript -->
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Weather History -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Riwayat Cuaca</div>
+                    <div class="card-icon"><i class="fas fa-history"></i></div>
+                </div>
+                <div class="card-body">
+                    <div class="spinner" id="history-spinner"></div>
+                    <div id="weather-history">
+                        <!-- Data riwayat cuaca akan diisi oleh JavaScript -->
                     </div>
                 </div>
             </div>
-
+            
+            <!-- Traveling Merchant -->
             <div class="card">
-                <h2 class="card-title"><i class="fas fa-seedling"></i> Seeds Overview</h2>
-                <div class="info-grid" id="seeds-data">
-                    <div class="info-item">
-                        <span class="info-label">Total Types:</span>
-                        <span class="info-value">Loading...</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Total Quantity:</span>
-                        <span class="info-value">Loading...</span>
-                    </div>
+                <div class="card-header">
+                    <div class="card-title">Traveling Merchant</div>
+                    <div class="card-icon"><i class="fas fa-store"></i></div>
                 </div>
-            </div>
-
-            <div class="card">
-                <h2 class="card-title"><i class="fas fa-egg"></i> Eggs Overview</h2>
-                <div class="info-grid" id="eggs-data">
-                    <div class="info-item">
-                        <span class="info-label">Total Types:</span>
-                        <span class="info-value">Loading...</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Total Quantity:</span>
-                        <span class="info-value">Loading...</span>
+                <div class="card-body">
+                    <div class="spinner" id="merchant-spinner"></div>
+                    <div id="merchant-info">
+                        <!-- Data merchant akan diisi oleh JavaScript -->
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="tabs">
-            <button class="tab active" data-tab="gear"><i class="fas fa-tools"></i> Gear</button>
-            <button class="tab" data-tab="cosmetics"><i class="fas fa-palette"></i> Cosmetics</button>
-            <button class="tab" data-tab="events"><i class="fas fa-store"></i> Events</button>
-            <button class="tab" data-tab="honey"><i class="fas fa-gift"></i> Honey Items</button>
+        
+        <div class="last-update">
+            <p>Terakhir update: <span id="last-global-update">-</span></p>
         </div>
-
-        <div id="gear" class="content active">
-            <div class="card">
-                <h2 class="card-title"><i class="fas fa-tools"></i> Gear Items</h2>
-                <div id="gear-table" class="loading">
-                    <div class="loading-spinner"></div>
-                </div>
-            </div>
+        
+        <div class="game-section">
+            <h2>Siap untuk melanjutkan petualangan?</h2>
+            <button class="btn btn-game" onclick="enterGame()">
+                <i class="fas fa-play-circle"></i> Lanjutkan Ke Game
+            </button>
         </div>
-
-        <div id="cosmetics" class="content">
-            <div class="card">
-                <h2 class="card-title"><i class="fas fa-palette"></i> Cosmetics</h2>
-                <div id="cosmetics-table" class="loading">
-                    <div class="loading-spinner"></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="events" class="content">
-            <div class="card">
-                <h2 class="card-title"><i class="fas fa-store"></i> Event Items</h2>
-                <div id="events-table" class="loading">
-                    <div class="loading-spinner"></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="honey" class="content">
-            <div class="card">
-                <h2 class="card-title"><i class="fas fa-gift"></i> Honey Items</h2>
-                <div id="honey-table" class="loading">
-                    <div class="loading-spinner"></div>
-                </div>
-            </div>
-        </div>
-
-        <h2 class="section-title">Weather History</h2>
-        <div class="card">
-            <h2 class="card-title"><i class="fas fa-history"></i> Recent Weather Patterns</h2>
-            <div id="weather-history-table" class="loading">
-                <div class="loading-spinner"></div>
-            </div>
-        </div>
-
-        <p class="refresh-info">Data will refresh automatically every 30 seconds</p>
+        
+        <footer>
+            <p>&copy; 2025 Game Monitoring Dashboard. Data provided by GAGAPI.</p>
+        </footer>
     </div>
 
     <script>
-        // API endpoints
-        const API_ENDPOINTS = {
-            alldata: 'https://gagapi.onrender.com/alldata'
-        };
-
-        // Tab switching functionality
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                // Remove active class from all tabs and contents
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+        // Konstanta API
+        const API_URL = 'https://gagapi.onrender.com/alldata';
+        
+        // Fungsi login
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const message = document.getElementById('login-message');
+            
+            if (username === 'jandel' && password === 'rambe') {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'flex';
+                message.style.display = 'none';
                 
-                // Add active class to clicked tab and corresponding content
-                tab.classList.add('active');
-                const tabId = tab.getAttribute('data-tab');
-                document.getElementById(tabId).classList.add('active');
-            });
-        });
-
-        // Format weather data for the dashboard
-        function formatWeatherData(data) {
-            if (!data || !data.weather) return '<div class="info-item"><span class="info-label">Error:</span><span class="info-value">No data available</span></div>';
-            
-            const weather = data.weather;
-            return `
-                <div class="info-item">
-                    <span class="info-label">Type:</span>
-                    <span class="info-value">${weather.type || 'N/A'}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Status:</span>
-                    <span class="status ${weather.active ? 'active' : 'inactive'}">${weather.active ? 'Active' : 'Inactive'}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Effects:</span>
-                    <span class="info-value">${weather.effects ? weather.effects.join(', ') : 'N/A'}</span>
-                </div>
-            `;
-        }
-
-        // Format seeds data for the dashboard
-        function formatSeedsData(data) {
-            if (!data || !data.seeds) return '<div class="info-item"><span class="info-label">Error:</span><span class="info-value">No data available</span></div>';
-            
-            const seeds = data.seeds;
-            const totalQuantity = seeds.reduce((sum, seed) => sum + (seed.quantity || 0), 0);
-            
-            return `
-                <div class="info-item">
-                    <span class="info-label">Total Types:</span>
-                    <span class="info-value">${seeds.length}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Total Quantity:</span>
-                    <span class="info-value">${totalQuantity}</span>
-                </div>
-            `;
-        }
-
-        // Format eggs data for the dashboard
-        function formatEggsData(data) {
-            if (!data || !data.eggs) return '<div class="info-item"><span class="info-label">Error:</span><span class="info-value">No data available</span></div>';
-            
-            const eggs = data.eggs;
-            const totalQuantity = eggs.reduce((sum, egg) => sum + (egg.quantity || 0), 0);
-            
-            return `
-                <div class="info-item">
-                    <span class="info-label">Total Types:</span>
-                    <span class="info-value">${eggs.length}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Total Quantity:</span>
-                    <span class="info-value">${totalQuantity}</span>
-                </div>
-            `;
-        }
-
-        // Format gear data for the table
-        function formatGearTable(data) {
-            if (!data || !data.gear) return '<p>Error loading gear data</p>';
-            
-            let html = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Quantity</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-            
-            data.gear.forEach(item => {
-                html += `
-                    <tr>
-                        <td>${item.name || 'Unknown'}</td>
-                        <td>${item.quantity || 0}</td>
-                    </tr>
-                `;
-            });
-            
-            html += `
-                    </tbody>
-                </table>
-                <p style="margin-top: 15px; font-style: italic;">${data.gear.length} gear items available</p>
-            `;
-            
-            return html;
-        }
-
-        // Format cosmetics data for the table
-        function formatCosmeticsTable(data) {
-            if (!data || !data.cosmetics) return '<p>Error loading cosmetics data</p>';
-            
-            let html = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Quantity</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-            
-            data.cosmetics.forEach(item => {
-                html += `
-                    <tr>
-                        <td>${item.name || 'Unknown'}</td>
-                        <td>${item.quantity || 0}</td>
-                    </tr>
-                `;
-            });
-            
-            html += `
-                    </tbody>
-                </table>
-                <p style="margin-top: 15px; font-style: italic;">${data.cosmetics.length} cosmetics available</p>
-            `;
-            
-            return html;
-        }
-
-        // Format events data for the table
-        function formatEventsTable(data) {
-            if (!data || !data.events) return '<p>Error loading events data</p>';
-            
-            let html = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Quantity</th>
-                            <th>Available</th>
-                            <th>Category</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-            
-            data.events.forEach(item => {
-                html += `
-                    <tr>
-                        <td>${item.name || 'Unknown'}</td>
-                        <td>${item.quantity || 0}</td>
-                        <td><span class="status ${item.available ? 'active' : 'inactive'}">${item.available ? 'Yes' : 'No'}</span></td>
-                        <td>${item.category || 'N/A'}</td>
-                    </tr>
-                `;
-            });
-            
-            html += `
-                    </tbody>
-                </table>
-                <p style="margin-top: 15px; font-style: italic;">${data.events.length} event items available</p>
-            `;
-            
-            return html;
-        }
-
-        // Format honey data for the table
-        function formatHoneyTable(data) {
-            if (!data || !data.honey) return '<p>Error loading honey data</p>';
-            
-            let html = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Quantity</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-            
-            data.honey.forEach(item => {
-                html += `
-                    <tr>
-                        <td>${item.name || 'Unknown'}</td>
-                        <td>${item.quantity || 0}</td>
-                    </tr>
-                `;
-            });
-            
-            html += `
-                    </tbody>
-                </table>
-                <p style="margin-top: 15px; font-style: italic;">${data.honey.length} honey items available</p>
-            `;
-            
-            return html;
-        }
-
-        // Format weather history data for the table
-        function formatWeatherHistoryTable(data) {
-            if (!data || !data.weatherHistory) return '<p>Error loading weather history data</p>';
-            
-            let html = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Type</th>
-                            <th>Status</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-            
-            data.weatherHistory.forEach(item => {
-                html += `
-                    <tr>
-                        <td>${item.type || 'N/A'}</td>
-                        <td><span class="status ${item.active ? 'active' : 'inactive'}">${item.active ? 'Active' : 'Inactive'}</span></td>
-                        <td>${item.startTime ? new Date(item.startTime).toLocaleString() : 'N/A'}</td>
-                        <td>${item.endTime ? new Date(item.endTime).toLocaleString() : 'N/A'}</td>
-                    </tr>
-                `;
-            });
-            
-            html += `
-                    </tbody>
-                </table>
-                <p style="margin-top: 15px; font-style: italic;">${data.weatherHistory.length} weather events recorded</p>
-            `;
-            
-            return html;
-        }
-
-        // Fetch data from API
-        async function fetchData() {
-            try {
-                const response = await fetch(API_ENDPOINTS.alldata, {
-                    headers: {
-                        'accept': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                return await response.json();
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                return null;
+                // Ambil data setelah login berhasil
+                fetchData();
+            } else {
+                message.style.display = 'block';
             }
         }
-
-        // Update all data
-        async function updateAllData() {
-            const data = await fetchData();
+        
+        // Fungsi logout
+        function logout() {
+            document.getElementById('login-screen').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+        
+        // Fungsi fetch data dari API
+        function fetchData() {
+            // Tampilkan loading spinner di semua section
+            document.querySelectorAll('.spinner').forEach(spinner => {
+                spinner.style.display = 'block';
+            });
             
-            if (data) {
-                // Update dashboard cards
-                document.getElementById('weather-data').innerHTML = formatWeatherData(data);
-                document.getElementById('seeds-data').innerHTML = formatSeedsData(data);
-                document.getElementById('eggs-data').innerHTML = formatEggsData(data);
-                
-                // Update tables
-                document.getElementById('gear-table').innerHTML = formatGearTable(data);
-                document.getElementById('cosmetics-table').innerHTML = formatCosmeticsTable(data);
-                document.getElementById('events-table').innerHTML = formatEventsTable(data);
-                document.getElementById('honey-table').innerHTML = formatHoneyTable(data);
-                document.getElementById('weather-history-table').innerHTML = formatWeatherHistoryTable(data);
-                
-                // Update last updated time
-                document.querySelector('.last-updated').innerHTML = `
-                    <i class="fas fa-sync-alt"></i> Last updated: ${new Date().toLocaleTimeString()}
+            // Kosongkan list data sebelum mengambil data baru
+            document.getElementById('gear-list').innerHTML = '';
+            document.getElementById('seeds-list').innerHTML = '';
+            document.getElementById('eggs-list').innerHTML = '';
+            document.getElementById('honey-list').innerHTML = '';
+            document.getElementById('cosmetics-list').innerHTML = '';
+            document.getElementById('events-list').innerHTML = '';
+            document.getElementById('weather-history').innerHTML = '';
+            document.getElementById('merchant-info').innerHTML = '';
+            
+            fetch(API_URL)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Sembunyikan spinner
+                    document.querySelectorAll('.spinner').forEach(spinner => {
+                        spinner.style.display = 'none';
+                    });
+                    
+                    // Tampilkan data di dashboard
+                    displayData(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    alert('Gagal mengambil data dari API. Silakan coba lagi.');
+                    
+                    // Sembunyikan spinner
+                    document.querySelectorAll('.spinner').forEach(spinner => {
+                        spinner.style.display = 'none';
+                    });
+                });
+        }
+        
+        // Fungsi untuk menampilkan data di dashboard
+        function displayData(data) {
+            // Tampilkan data cuaca
+            document.getElementById('weather-type').textContent = data.weather.type;
+            document.getElementById('weather-status').textContent = data.weather.active ? 'Aktif' : 'Tidak Aktif';
+            document.getElementById('weather-status').className = data.weather.active ? 'badge badge-active' : 'badge badge-inactive';
+            document.getElementById('weather-update').textContent = new Date(data.weather.lastUpdated).toLocaleString('id-ID');
+            
+            // Update icon cuaca berdasarkan type
+            const weatherIcon = document.getElementById('weather-icon');
+            if (data.weather.type === 'rain') {
+                weatherIcon.className = 'fas fa-cloud-rain';
+            } else if (data.weather.type === 'snow') {
+                weatherIcon.className = 'fas fa-snowflake';
+            } else if (data.weather.type === 'heatwave') {
+                weatherIcon.className = 'fas fa-sun';
+            } else {
+                weatherIcon.className = 'fas fa-cloud-sun';
+            }
+            
+            // Tampilkan efek cuaca
+            const effectsList = document.getElementById('weather-effects');
+            effectsList.innerHTML = '';
+            data.weather.effects.forEach(effect => {
+                const li = document.createElement('li');
+                li.textContent = effect;
+                effectsList.appendChild(li);
+            });
+            
+            // Tampilkan data gear
+            const gearList = document.getElementById('gear-list');
+            data.gear.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'item';
+                li.innerHTML = `
+                    <div class="item-name">
+                        <div class="item-icon"><i class="fas fa-toolbox"></i></div>
+                        <span>${item.name}</span>
+                    </div>
+                    <div class="quantity">${item.quantity}</div>
+                `;
+                gearList.appendChild(li);
+            });
+            
+            // Tampilkan data seeds
+            const seedsList = document.getElementById('seeds-list');
+            data.seeds.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'item';
+                li.innerHTML = `
+                    <div class="item-name">
+                        <div class="item-icon"><i class="fas fa-seedling"></i></div>
+                        <span>${item.name}</span>
+                    </div>
+                    <div class="quantity">${item.quantity}</div>
+                `;
+                seedsList.appendChild(li);
+            });
+            
+            // Tampilkan data eggs
+            const eggsList = document.getElementById('eggs-list');
+            data.eggs.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'item';
+                li.innerHTML = `
+                    <div class="item-name">
+                        <div class="item-icon"><i class="fas fa-egg"></i></div>
+                        <span>${item.name}</span>
+                    </div>
+                    <div class="quantity">${item.quantity}</div>
+                `;
+                eggsList.appendChild(li);
+            });
+            
+            // Tampilkan data honey
+            const honeyList = document.getElementById('honey-list');
+            data.honey.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'item';
+                li.innerHTML = `
+                    <div class="item-name">
+                        <div class="item-icon"><i class="fas fa-honey-pot"></i></div>
+                        <span>${item.name}</span>
+                    </div>
+                    <div class="quantity">${item.quantity}</div>
+                `;
+                honeyList.appendChild(li);
+            });
+            
+            // Tampilkan data cosmetics
+            const cosmeticsList = document.getElementById('cosmetics-list');
+            data.cosmetics.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'item';
+                li.innerHTML = `
+                    <div class="item-name">
+                        <div class="item-icon"><i class="fas fa-couch"></i></div>
+                        <span>${item.name}</span>
+                    </div>
+                    <div class="quantity">${item.quantity}</div>
+                `;
+                cosmeticsList.appendChild(li);
+            });
+            
+            // Tampilkan data events
+            const eventsList = document.getElementById('events-list');
+            if (data.events && data.events.length > 0) {
+                data.events.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'item';
+                    li.innerHTML = `
+                        <div class="item-name">
+                            <div class="item-icon"><i class="fas fa-calendar-day"></i></div>
+                            <span>${item.name}</span>
+                        </div>
+                        <div class="quantity">${item.quantity}</div>
+                    `;
+                    eventsList.appendChild(li);
+                });
+            } else {
+                eventsList.innerHTML = '<li class="item">Tidak ada events aktif</li>';
+            }
+            
+            // Tampilkan riwayat cuaca
+            const weatherHistory = document.getElementById('weather-history');
+            data.weatherHistory.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML = `
+                    <p><strong>Tipe:</strong> ${item.type}</p>
+                    <p><strong>Status:</strong> <span class="${item.active ? 'badge badge-active' : 'badge badge-inactive'}">${item.active ? 'Aktif' : 'Tidak Aktif'}</span></p>
+                    <p><strong>Waktu:</strong> ${new Date(item.startTime).toLocaleString('id-ID')} - ${new Date(item.endTime).toLocaleString('id-ID')}</p>
+                `;
+                weatherHistory.appendChild(div);
+            });
+            
+            // Tampilkan informasi traveling merchant
+            const merchantInfo = document.getElementById('merchant-info');
+            if (data.travelingMerchant) {
+                merchantInfo.innerHTML = `
+                    <div class="weather-info">
+                        <p><strong>Nama:</strong> ${data.travelingMerchant.merchantName}</p>
+                        <p><strong>Tiba:</strong> ${data.travelingMerchant.arrivedAt}</p>
+                        <p><strong>Berangkat:</strong> ${data.travelingMerchant.leavesAt}</p>
+                    </div>
+                    <p><strong>Items Available:</strong></p>
+                    <ul class="item-list">
+                        ${data.travelingMerchant.items.map(item => `
+                            <li class="item">
+                                <div class="item-name">
+                                    <div class="item-icon"><i class="fas fa-box"></i></div>
+                                    <span>${item.name}</span>
+                                </div>
+                                <div class="quantity">${item.quantity}</div>
+                            </li>
+                        `).join('')}
+                    </ul>
                 `;
             } else {
-                document.querySelector('.last-updated').innerHTML = `
-                    <i class="fas fa-exclamation-triangle"></i> Error loading data
-                `;
+                merchantInfo.innerHTML = '<p>Tidak ada merchant yang aktif</p>';
             }
+            
+            // Tampilkan last update time
+            document.getElementById('last-global-update').textContent = new Date(data.lastGlobalUpdate).toLocaleString('id-ID');
         }
-
-        // Initial load
-        updateAllData();
         
-        // Auto-refresh every 30 seconds
-        setInterval(updateAllData, 30000);
+        // Fungsi enter game
+        function enterGame() {
+            alert('Anda akan diarahkan ke dalam game...');
+            // Di sini biasanya akan ada redirect ke URL game
+            // window.location.href = 'https://game-url.com';
+        }
+        
+        // Event listener untuk input password (bisa login dengan tekan Enter)
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
     </script>
 </body>
 </html>
